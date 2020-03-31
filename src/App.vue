@@ -1,14 +1,19 @@
 <template>
-  <div id="app"><Categories /></div>
+  <div id="app">
+    <navBar />
+    <Categories />
+  </div>
 </template>
 
 <script>
 import Categories from "./components/Categories.vue";
+import NavBar from "./components/NavBar.vue";
 
 export default {
   name: "App",
   components: {
-    Categories
+    Categories,
+    NavBar
   }
 };
 </script>

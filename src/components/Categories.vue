@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Categories page</h1>
+    <h1 class="header">Categories</h1>
     <div class="cardsContainer">
       <div v-for="category in categories" :key="category.id" class="card">
         <h3 class="title">{{ category.title }}</h3>
@@ -36,6 +36,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.header {
+  width: 100%;
+  text-align: center;
+  margin: 20px 0;
+  color: blueviolet;
+  font-size: 55px;
+}
 .cardsContainer {
   width: 100%;
   display: flex;

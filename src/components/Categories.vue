@@ -47,21 +47,19 @@ export default {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  /* flex-direction: column; */
   align-items: center;
   justify-content: space-between;
 }
 
 .card {
   width: 400px;
-  border: 2px solid #42b983;
+  border: 2px solid #343a40;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
   margin: 10px;
-  /* width: 20%; */
 }
 
 .title {
@@ -73,6 +71,6 @@ export default {
 }
 
 .numClues span {
-  color: #42b983;
+  color: blueviolet;
 }
 </style>

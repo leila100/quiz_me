@@ -8,9 +8,14 @@
       </div>
     </div>
     {{ message }}
-    <div :class="[{ visible: showQuestion }, { questionContainer: true }]">
+    <div v-if="showQuestion">
       <div class="text">---- {{ questionText }} ----</div>
-      <input v-model="userAnswer" placeholder="type answer here" class="input" @keypress.enter="checkAnswer" />
+      <input
+        v-model="userAnswer"
+        placeholder="type answer here"
+        class="input"
+        @keypress.enter="checkAnswer"
+      />
     </div>
   </div>
 </template>
@@ -36,7 +41,12 @@ export default {
     axios.get(`http://jservice.io/api/clues?category=${id}`).then(response => {
       console.log(response.data);
       this.questions = response.data.map(clue => {
-        return { id: clue.id, question: clue.question, value: clue.value, answer: clue.answer };
+        return {
+          id: clue.id,
+          question: clue.question,
+          value: clue.value,
+          answer: clue.answer
+        };
       });
       this.questions.sort((a, b) => parseInt(a.value) - parseInt(b.value));
       this.category = response.data[0].category.title;
@@ -48,7 +58,9 @@ export default {
     toggleQuestion(questionId) {
       console.log(this.showQuestion);
       if (this.showQuestion === false) this.showQuestion = true;
-      const selectedQuestion = this.questions.find(question => question.id === questionId);
+      const selectedQuestion = this.questions.find(
+        question => question.id === questionId
+      );
       this.questionText = selectedQuestion.question;
       this.answer = selectedQuestion.answer;
       this.value = selectedQuestion.value;
@@ -57,7 +69,10 @@ export default {
     checkAnswer() {
       console.log("answer", this.answer);
       console.log("user answer", this.userAnswer);
-      if (this.userAnswer !== null && this.answer.toLowerCase() === this.userAnswer.trim().toLowerCase())
+      if (
+        this.userAnswer !== null &&
+        this.answer.toLowerCase() === this.userAnswer.trim().toLowerCase()
+      )
         this.message = `Good answer. +${this.value}`;
       else this.message = `Wrong answer - the answer was ${this.answer} `;
       this.showQuestion = false;
@@ -68,13 +83,6 @@ export default {
 </script>
 
 <style scoped>
-.questionContainer {
-  display: none;
-}
-.visible {
-  display: block;
-  margin: 20px;
-}
 .cardsContainer {
   display: flex;
   flex-wrap: wrap;
@@ -88,6 +96,7 @@ export default {
 }
 .text {
   font-size: 18px;
+  margin-top: 20px;
 }
 .input {
   padding: 10px;

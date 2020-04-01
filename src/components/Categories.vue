@@ -2,12 +2,17 @@
   <div>
     <h1 class="header">Categories</h1>
     <div class="cardsContainer">
-      <div v-for="category in categories" :key="category.id" class="card">
+      <router-link
+        :to="{ name: 'category', params: { id: category.id } }"
+        v-for="category in categories"
+        :key="category.id"
+        class="card"
+      >
         <h3 class="title">{{ category.title }}</h3>
         <div class="numClues">
           Questions: <span>{{ category.clues_count }}</span>
         </div>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -21,9 +26,6 @@ export default {
     return {
       categories: null
     };
-  },
-  props: {
-    msg: String
   },
   mounted() {
     axios.get("http://jservice.io/api/categories?count=20").then(response => {

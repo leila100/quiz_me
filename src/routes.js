@@ -5,7 +5,7 @@ import Random from "./components/Random.vue";
 const routes = [
   { path: "/", component: Categories },
   { path: "/random", component: Random },
-  { path: "/:id", component: Category }
+  { path: "/category/:id", component: Category, name: "category" }
 ];
 
 export default routes;

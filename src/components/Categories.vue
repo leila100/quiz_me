@@ -1,16 +1,18 @@
 <template>
   <div>
     <h1 class="header">Categories</h1>
+    <h2>Score: {{score}}</h2>
     <div class="cardsContainer">
       <router-link
-        :to="{ name: 'category', params: { id: category.id } }"
+        :to="{ name: 'category', params: { id: category.id, score: score } }"
         v-for="category in categories"
         :key="category.id"
         class="card"
       >
         <h3 class="title">{{ category.title }}</h3>
         <div class="numClues">
-          Questions: <span>{{ category.clues_count }}</span>
+          Questions:
+          <span>{{ category.clues_count }}</span>
         </div>
       </router-link>
     </div>
@@ -19,12 +21,14 @@
 
 <script>
 import axios from "axios";
+import { eventBus } from "../main";
 
 export default {
   name: "HelloWorld",
   data() {
     return {
-      categories: null
+      categories: null,
+      score: 0
     };
   },
   mounted() {
@@ -32,6 +36,16 @@ export default {
       console.log(response.data);
       this.categories = response.data;
     });
+    eventBus.$on("scoreIncremented", score => {
+      console.log("***Getting the score from bus: ", score);
+      this.score = score;
+    });
+  },
+  created() {
+    // eventBus.$on("scoreIncremented", score => {
+    //   console.log("***Getting the score from bus: ", score);
+    //   this.score = score;
+    // });
   }
 };
 </script>

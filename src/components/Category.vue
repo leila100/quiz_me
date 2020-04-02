@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>-- {{ category }} --</h1>
+    <h2>Score: {{score}}</h2>
     <div class="cardsContainer">
       <div v-for="question in questions" :key="question.id" class="card">
         <!-- <div @click="toggleQuestion(question.id)">{{ question.value }}</div> -->
@@ -22,7 +23,7 @@
 
 <script>
 import axios from "axios";
-
+import { eventBus } from "../main";
 export default {
   data() {
     return {
@@ -33,11 +34,13 @@ export default {
       answer: "",
       value: null,
       userAnswer: null,
-      message: ""
+      message: "",
+      score: null
     };
   },
   mounted() {
     const id = this.$route.params.id;
+    this.score = this.$route.params.score;
     axios.get(`http://jservice.io/api/clues?category=${id}`).then(response => {
       console.log(response.data);
       this.questions = response.data.map(clue => {
@@ -67,14 +70,19 @@ export default {
       this.message = "";
     },
     checkAnswer() {
+      // let score = this.$route.params.score;
+      console.log("score: ", this.score);
+      console.log("params: ", this.$route.params);
       console.log("answer", this.answer);
       console.log("user answer", this.userAnswer);
       if (
         this.userAnswer !== null &&
         this.answer.toLowerCase() === this.userAnswer.trim().toLowerCase()
-      )
+      ) {
         this.message = `Good answer. +${this.value}`;
-      else this.message = `Wrong answer - the answer was ${this.answer} `;
+        this.score += this.value;
+        eventBus.$emit("scoreIncremented", this.score);
+      } else this.message = `Wrong answer - the answer was ${this.answer} `;
       this.showQuestion = false;
       this.userAnswer = "";
     }

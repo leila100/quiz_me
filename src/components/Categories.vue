@@ -4,7 +4,7 @@
     <h2>Score: {{ score }}</h2>
     <div class="cardsContainer">
       <router-link
-        :to="{ name: 'category', params: { id: category.id, score: score } }"
+        :to="{ name: 'category', params: { id: category.id } }"
         v-for="category in categories"
         :key="category.id"
         class="card"
@@ -24,20 +24,17 @@ import axios from "axios";
 
 export default {
   name: "HelloWorld",
-  data() {
-    return {
-      categories: null
-    };
-  },
   computed: {
     score() {
       return this.$store.state.score;
+    },
+    categories() {
+      return this.$store.state.categories;
     }
   },
   mounted() {
     axios.get("http://jservice.io/api/categories?count=20").then(response => {
-      console.log(response.data);
-      this.categories = response.data;
+      this.$store.state.categories = response.data;
     });
   }
 };

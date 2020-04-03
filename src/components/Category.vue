@@ -1,17 +1,26 @@
 <template>
-  <div>
+  <div class="container">
     <h1>-- {{ category }} --</h1>
-    <h2>Score: {{ score }}</h2>
+    <h2>
+      Score: <span class="score">{{ score }}</span>
+    </h2>
     <div class="cardsContainer">
-      <div v-for="question in questions" :key="question.id" class="card">
-        <!-- <div @click="toggleQuestion(question.id)">{{ question.value }}</div> -->
-        <div align="center" @click="toggleQuestion(question.id)">{{ question.value }}</div>
+      <div v-for="question in questions" :key="question.id">
+        <div class="value" v-if="!question.clicked" align="center" @click="toggleQuestion(question.id)">
+          {{ question.value }}
+        </div>
       </div>
     </div>
-    {{ message }}
+    <div class="message">{{ message }}</div>
     <div v-if="showQuestion">
-      <div class="text">---- {{ questionText }} ----</div>
-      <input v-model="userAnswer" placeholder="type answer here" class="input" @keypress.enter="checkAnswer" />
+      <!-- <div class="text">{{ value }} ---- {{ questionText }}</div>
+      <input v-model="userAnswer" placeholder="type answer here" class="input" @keypress.enter="checkAnswer" /> -->
+      <b-card :header="value.toString()">
+        <b-card-text>
+          <div class="text">{{ questionText }}</div>
+          <input v-model="userAnswer" placeholder="type answer here" class="input" @keypress.enter="checkAnswer" />
+        </b-card-text>
+      </b-card>
     </div>
   </div>
 </template>
@@ -45,7 +54,8 @@ export default {
           id: clue.id,
           question: clue.question,
           value: clue.value,
-          answer: clue.answer
+          answer: clue.answer,
+          clicked: false
         };
       });
       this.questions.sort((a, b) => parseInt(a.value) - parseInt(b.value));
@@ -57,7 +67,13 @@ export default {
   methods: {
     toggleQuestion(questionId) {
       if (this.showQuestion === false) this.showQuestion = true;
-      const selectedQuestion = this.questions.find(question => question.id === questionId);
+      // const selectedQuestion = this.questions.find(question => question.id === questionId);
+      const questionIndex = this.questions.findIndex(question => question.id === questionId);
+      console.log("index: ", questionIndex);
+      const selectedQuestion = this.questions[questionIndex];
+      console.log("selected question: ", selectedQuestion);
+      if (selectedQuestion.clicked) return;
+      this.questions[questionIndex].clicked = true;
       this.questionText = selectedQuestion.question;
       this.answer = selectedQuestion.answer;
       this.value = selectedQuestion.value;
@@ -78,14 +94,26 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  text-align: center;
+}
 .cardsContainer {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
-.card {
+.value {
   width: 200px;
   margin: 10px;
   padding: 10px;
+  background-color: blueviolet;
+  color: white;
+}
+.card {
+  width: 60%;
+  margin: 50px auto;
+}
+.card-header {
   background-color: blueviolet;
   color: white;
 }
@@ -96,5 +124,13 @@ export default {
 .input {
   padding: 10px;
   margin-top: 10px;
+  width: 90%;
+}
+.message {
+  margin-top: 20px;
+  font-size: 20px;
+}
+.score {
+  color: blueviolet;
 }
 </style>

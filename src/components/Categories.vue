@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="header">Categories</h1>
-    <h2>Score: {{score}}</h2>
+    <h2>Score: {{ score }}</h2>
     <div class="cardsContainer">
       <router-link
         :to="{ name: 'category', params: { id: category.id, score: score } }"
@@ -21,31 +21,24 @@
 
 <script>
 import axios from "axios";
-import { eventBus } from "../main";
 
 export default {
   name: "HelloWorld",
   data() {
     return {
-      categories: null,
-      score: 0
+      categories: null
     };
+  },
+  computed: {
+    score() {
+      return this.$store.state.score;
+    }
   },
   mounted() {
     axios.get("http://jservice.io/api/categories?count=20").then(response => {
       console.log(response.data);
       this.categories = response.data;
     });
-    eventBus.$on("scoreIncremented", score => {
-      console.log("***Getting the score from bus: ", score);
-      this.score = score;
-    });
-  },
-  created() {
-    // eventBus.$on("scoreIncremented", score => {
-    //   console.log("***Getting the score from bus: ", score);
-    //   this.score = score;
-    // });
   }
 };
 </script>

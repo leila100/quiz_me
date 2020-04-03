@@ -7,6 +7,7 @@ import routes from "./routes";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
+import { store } from "./store/store";
 import App from "./App.vue";
 
 const router = new VueRouter({
@@ -20,9 +21,8 @@ Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(VueRouter);
 
-export const eventBus = new Vue();
-
 new Vue({
+  store,
   router,
   render: h => h(App)
 }).$mount("#app");

@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>-- {{ category }} --</h1>
-    <h2>Score: {{score}}</h2>
+    <h2>Score: {{ score }}</h2>
     <div class="cardsContainer">
       <div v-for="question in questions" :key="question.id" class="card">
         <!-- <div @click="toggleQuestion(question.id)">{{ question.value }}</div> -->
@@ -11,19 +11,13 @@
     {{ message }}
     <div v-if="showQuestion">
       <div class="text">---- {{ questionText }} ----</div>
-      <input
-        v-model="userAnswer"
-        placeholder="type answer here"
-        class="input"
-        @keypress.enter="checkAnswer"
-      />
+      <input v-model="userAnswer" placeholder="type answer here" class="input" @keypress.enter="checkAnswer" />
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import { eventBus } from "../main";
 export default {
   data() {
     return {
@@ -34,15 +28,18 @@ export default {
       answer: "",
       value: null,
       userAnswer: null,
-      message: "",
-      score: null
+      message: ""
     };
+  },
+  computed: {
+    score() {
+      return this.$store.state.score;
+    }
   },
   mounted() {
     const id = this.$route.params.id;
     this.score = this.$route.params.score;
     axios.get(`http://jservice.io/api/clues?category=${id}`).then(response => {
-      console.log(response.data);
       this.questions = response.data.map(clue => {
         return {
           id: clue.id,
@@ -59,29 +56,19 @@ export default {
   },
   methods: {
     toggleQuestion(questionId) {
-      console.log(this.showQuestion);
       if (this.showQuestion === false) this.showQuestion = true;
-      const selectedQuestion = this.questions.find(
-        question => question.id === questionId
-      );
+      const selectedQuestion = this.questions.find(question => question.id === questionId);
       this.questionText = selectedQuestion.question;
       this.answer = selectedQuestion.answer;
       this.value = selectedQuestion.value;
       this.message = "";
     },
     checkAnswer() {
-      // let score = this.$route.params.score;
-      console.log("score: ", this.score);
-      console.log("params: ", this.$route.params);
       console.log("answer", this.answer);
       console.log("user answer", this.userAnswer);
-      if (
-        this.userAnswer !== null &&
-        this.answer.toLowerCase() === this.userAnswer.trim().toLowerCase()
-      ) {
+      if (this.userAnswer !== null && this.answer.toLowerCase() === this.userAnswer.trim().toLowerCase()) {
         this.message = `Good answer. +${this.value}`;
-        this.score += this.value;
-        eventBus.$emit("scoreIncremented", this.score);
+        this.$store.state.score += this.value;
       } else this.message = `Wrong answer - the answer was ${this.answer} `;
       this.showQuestion = false;
       this.userAnswer = "";
